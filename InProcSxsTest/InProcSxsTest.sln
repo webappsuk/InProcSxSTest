@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InProcSxSTest", "InProcSxSTest.csproj", "{FD1FD0A1-5B8D-4BF2-9A7E-CFB5FCA5572D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8C987910-0F0B-456A-9304-EB5FDCA67D3F} = {8C987910-0F0B-456A-9304-EB5FDCA67D3F}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRequest", "..\WebRequest\WebRequest.csproj", "{8C987910-0F0B-456A-9304-EB5FDCA67D3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Release", "Release", "{A29CB990-AD5D-4532-A0CB-ABCBF634F584}"
+	ProjectSection(SolutionItems) = preProject
+		..\Release\GitHub - LTruijens-powershell-gac.url = ..\Release\GitHub - LTruijens-powershell-gac.url
+		..\Release\PowerShellGac.dll = ..\Release\PowerShellGac.dll
+		..\Release\PowerShellGac.dll_License.txt = ..\Release\PowerShellGac.dll_License.txt
+		..\Release\RunTests.ps1 = ..\Release\RunTests.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E249D14E-F511-4CC9-9B9B-F34D82CE8FF9}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD1FD0A1-5B8D-4BF2-9A7E-CFB5FCA5572D}.Debug|x86.ActiveCfg = Debug|x86
+		{FD1FD0A1-5B8D-4BF2-9A7E-CFB5FCA5572D}.Debug|x86.Build.0 = Debug|x86
+		{8C987910-0F0B-456A-9304-EB5FDCA67D3F}.Debug|x86.ActiveCfg = Debug|x86
+		{8C987910-0F0B-456A-9304-EB5FDCA67D3F}.Debug|x86.Build.0 = Debug|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A29CB990-AD5D-4532-A0CB-ABCBF634F584} = {E249D14E-F511-4CC9-9B9B-F34D82CE8FF9}
+	EndGlobalSection
+EndGlobal

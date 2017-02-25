@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/bin/Release
+/InProcSxsTest/obj/x86/Release
+/InProcSxsTest/packages/Ookii.CommandLine.2.2
+/WebRequest/obj
+/InProcSxsTest/obj/x86/Debug
+/Release/Ookii.CommandLine.xml
+/Release/InProcSxsTest.vshost.exe.config
+/Release/InProcSxsTest.exe.config
