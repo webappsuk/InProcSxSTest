@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRequest", "WebRequest.csproj", "{8C987910-0F0B-456A-9304-EB5FDCA67D3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{87342E20-91C5-4075-A2AC-92A5D65D5CC1}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{CC7B39D7-CC95-409D-A598-ABC463AF6306}"
+	ProjectSection(SolutionItems) = preProject
+		bin\GitHub - LTruijens-powershell-gac.url = bin\GitHub - LTruijens-powershell-gac.url
+		bin\PowerShellGac.dll = bin\PowerShellGac.dll
+		bin\PowerShellGac.dll_License.txt = bin\PowerShellGac.dll_License.txt
+		bin\Register.ps1 = bin\Register.ps1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C987910-0F0B-456A-9304-EB5FDCA67D3F}.Debug|x86.ActiveCfg = Debug|x86
+		{8C987910-0F0B-456A-9304-EB5FDCA67D3F}.Debug|x86.Build.0 = Debug|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CC7B39D7-CC95-409D-A598-ABC463AF6306} = {87342E20-91C5-4075-A2AC-92A5D65D5CC1}
+	EndGlobalSection
+EndGlobal

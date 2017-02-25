@@ -2,26 +2,23 @@
 Test code for simulating InProc SxS to allow NewRelic to identify issues.
 
 ## What it does
-The test program is written using .NET 2.0 and first attempts to hit a URL (by default Google), and look for an 'OK'
-response.  Having ensured that the URL is active, it then attempts to instantiate the HttpWebRequestWrapper COM Object
-found in the .NET 4.5.2 WebRequest project.  It then invokes the Execute method on an instance of the object, which will
-repeat the URL test, this time using the .NET 4.0 version of System.Net.WebRequest.  This is an example of InProc SxS,
-where a .NET domain is hosting a .NET 4 COM Object.
-
-The important code is in Program.cs and is well commented.
+The InProcSxSTest solution creates an ASP.NET WebService and allows you to hit the same service using 
+[InProc SxS](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/).
+This reliable crashes New Relic's .NET Agent when enabled, throwing a 
+[StackOverflowException](https://msdn.microsoft.com/en-us/library/system.stackoverflowexception(v=vs.110).aspx).
 
 ## Building
-The solution should be built using VS 2015.  There are 2 projects, InProcSxSTest and WebRequest, and a dependancy has
-been specified that ensures WebRequest is built prior to InProcSxSTest.  You should restore NuGet packages, as
-InProcSxSTest uses the 'Ookii.CommandLine' NuGet, however NuGet restore should happen on first build anyway.  The
-solution only specifies a x86 Debug configuration, and this is the one that will be built.
+There are two solutions in the project that should be opened using VS 2015.
 
-## Deploying
-After the first build, the executable and class libraries are automatically deployed to the root Release folder.
-You should open an Adminsistrator Powershell prompt and run `.\RunTests.ps1` the first time at least, as this will
-register the WebRequest class library for COM, and then run the tests.
+### WebRequest
+The WebRequest solution defines a .NET 4.5.2 wrapper to the 
+[.NET 4.0 `System.Net.WebRequest` class](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/)
+called `HttpWebRequestWrapper` that implements a single method called `Execute`.  It exposes this method via COM.  You 
+should build this solution first and then open a Powershell prompt using 'Run as administrator'.  Navigate to the 
+`WebRequest\bin` directory and then type `.\Register.ps1`.  This is only necessary the first time you build the COM
+object, however you should repeat the exercise if you make any changes to the WebRequest solution.
 
-You should see the following:
+On running `.\Register.ps1` you should see the following:
 ```
 Microsoft .NET Framework Assembly Registration Utility version 4.6.1586.0
 for Microsoft .NET Framework version 4.6.1586.0
@@ -33,37 +30,72 @@ Installed the following into the GAC:
 
 Version        Name
 -------        ----
-1.0.0.0        WebRequest
-Executing tests.
-Attempting to contact "https://google.com/" using .NET 2.0 HttpWebRequest.
-"https://google.com/" returned status code 'OK'.
-Successfully contacted "https://google.com/" using .NET 2.0 HttpWebRequest.
-
-Attempting to find COM Object using CLSID '73a7a013-2249-4a59-8e3c-594e70a2d3c4'.
-Found COM Object using CLSID '73a7a013-2249-4a59-8e3c-594e70a2d3c4'.
-Attempting to create instance of 'System.__ComObject'.
-Create instance of 'System.__ComObject'.
-Attempting to invoke method 'Execute' on instance of 'System.__ComObject'.
-Attempting to contact "https://google.com/" using .NET 4.0 HttpWebRequest.
-"https://google.com/" returned status code 'OK'.
-Successfully contacted "https://google.com/" using .NET 4.0 HttpWebRequest.
-Successfully invoked method 'Execute' on instance of 'System.__ComObject', and received a response of length 46013.
-
-All tests passed.
+1.0.???.???    WebRequest
 Press any key to continue . . .
 ```
 
-After which you can press any key to finish.
+### InProcSxSTest
+The InProcSxSTest solution creates a simple ASP.NET 2.0 Web Service which exposes three methods.  You must follow the
+above instructions first to ensure the WebRequest COM Object is correctly registered in the GAC.  
 
-## Running
-Once the WebRequest COM Library is registered correctly (see above), you can Debug the InProcSxSTest executable inside
-Visual Studio.
+## Debugging in Visual Studio
+As the projects are set to build in x86, it's important that IIS Express is also run in x86.  Further, the .NET 2.0
+code uses [`XmlDocument`](https://msdn.microsoft.com/en-us/library/system.xml.xmldocument(v=vs.80).aspx), which can
+cause problems with Visual Studio 2015, so I recommend setting the following options:
 
-Both the Powershell script and the executable accept a URL argument, e.g.:
 ```
-PS> .\RunTests.ps1 -url https://www.webappuk.com
+ Tools
+  -> Options
+   -> Projects and Solutions
+    -> Web Projects
+     -> Uncheck "Use the 64 bit version of IIS Express for web sites and projects"
+   -> Debugging
+    -> General
+     -> Check "Use Managed Compatability Mode"
+     -> Check "Use the legacy C# and VB expression evaluators"
 ```
-or:
+
+The .NET 2.0 code can be debugged by starting the InProcSxSTest Web Service in Visual Studio directly.  Debugging 
+should start IIS Express and open a website on your localhost at `http://localhost:<port>/WebService.asmx`.  I 
+recommend disabling the New Relic .NET Agent the first time you test to ensure everything is installed and working 
+correctly.
+
+There are three web methods exposed:
+
+### Ping
+A simple web method that echoes the specified input.  This is used by the other two Web Methods as an endpoint to 
+contact whilst testing.
+
+### TestWebRequest
+This web method will call the [Ping](#Ping) web method using the [.NET 2.0 System.Net.WebRequest](https://msdn.microsoft.com/en-us/library/system.net.webrequest(v=vs.80).aspx\),
+as such it can be used to ensure the InProcSxSTest is correctly installed and working, as it does not rely on the
+WebRequest COM Object already being installed. 
+
+### TestInProcSxSWebRequest 
+This web method will call the [Ping](#Ping) web method using 
+[InProc SxS](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/)
+to call the
+[.NET 4.0 `System.Net.WebRequest` class](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/).
+When the New Relic .NET Agent is running this will cause a 
+[StackOverflowException](https://msdn.microsoft.com/en-us/library/system.stackoverflowexception(v=vs.110).aspx).  Note
+that this requires the WebRequest COM Object to be installed, as described in the [WebRequest Section](#WebRequest)
+above.
+
+## Debugging the WebRequest COM Object
+If you wish to Debug the .NET 4.0 WebRequest project then it is a little more complex as Visual Studio can only have one
+instance of a debugger running at the same time 
+(see [Debugging Multiple CLRs (InProc SxS)](https://blogs.msdn.microsoft.com/carlos/2013/09/06/debugging-multiple-clrs-inproc-sxs/)
+for more details). Open a second instance of Visual Studio, and load the WebRequest solution.  Start the InProcSxSTest
+solution *without debugging* and once IIS Express has started, go the WebRequest solution and attach to the IIS Express
+proces directly:
+
 ```
-> InProcSxSTest "https://www.webappuk.com"
+  Debug
+   -> Attach to Process
+     -> Attach to: Managed (v4.6, v4.5, v4.0)
+     -> Available processes: iisexpress.exe
 ```
+
+It is critical that you set the 'Attach to:' option to `Managed (v4.6, v4.5, v4.0)` as the primary CLR is .NET 2.0.
+Note that, unfortunately, you can only attach one debugger to a process at a time, so you cannot have both instances of
+Visual Studio set to debug IIS Express.

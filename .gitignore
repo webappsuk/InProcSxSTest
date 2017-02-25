@@ -10,3 +10,5 @@
 /Release/Ookii.CommandLine.xml
 /Release/InProcSxsTest.vshost.exe.config
 /Release/InProcSxsTest.exe.config
+/InProcSxSTest/.vs/config
+/InProcSxSTest/bin/InProcSxSTest.dll.config

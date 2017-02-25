@@ -1,4 +1,4 @@
-param ($dll = "WebRequest.dll", $exe = "InProcSxsTest.exe", $url = "https://google.com")
+param ($dll = "WebRequest.dll")
 $ErrorActionPreference = "Stop"
 
 function Get-AbsolutePath($Path) {
@@ -47,7 +47,6 @@ if (!(test-path $TheGac))
 
 $dllPathRes = (Resolve-Path -LiteralPath $dll).ProviderPath
 $psGACPathRes = (Resolve-Path -LiteralPath $psGACPath).ProviderPath
-$exePathRes = (Resolve-Path -LiteralPath $exe).ProviderPath
 
 if (!(Test-Path $dllPathRes))
 {
@@ -60,14 +59,6 @@ if (!(Test-Path $dllPathRes))
 if (!(Test-Path $psGACPathRes))
 {
     "Incorrect location of the PowerShellGAC.dll."
-    Pause
-    exit
-}
-
-if (!(Test-Path $exePathRes))
-{
-    "Unable to locate the executable.  Please check the path is correct: "
-    $exePathRes
     Pause
     exit
 }
@@ -85,7 +76,4 @@ Add-Type -Path $psGACPath
 $asmName = [System.Reflection.AssemblyName]::GetAssemblyName($dllPathRes)
 "Installed the following into the GAC:"
 $asmName
-
-"Executing tests."
-.$exePathRes "$url"
 Pause
