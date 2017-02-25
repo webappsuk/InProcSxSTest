@@ -1,19 +1,21 @@
 # InProcSxSTest
-Test code for simulating InProc SxS to allow NewRelic to identify issues.
+Test code for simulating 
+[InProc SxS](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/)
+to allow NewRelic to identify issues.
 
 ## What it does
 The InProcSxSTest solution creates an ASP.NET WebService and allows you to hit the same service using 
 [InProc SxS](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/).
-This reliable crashes New Relic's .NET Agent when enabled, throwing a 
+This reliably crashes New Relic's .NET Agent when enabled, throwing a 
 [StackOverflowException](https://msdn.microsoft.com/en-us/library/system.stackoverflowexception(v=vs.110).aspx).
 
 ## Building
-There are two solutions in the project that should be opened using VS 2015.
+There are two solutions in the project that should be opened using Visual Studio 2015.
 
 ### WebRequest
 The WebRequest solution defines a .NET 4.5.2 wrapper to the 
 [.NET 4.0 `System.Net.WebRequest` class](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/)
-called `HttpWebRequestWrapper` that implements a single method called `Execute`.  It exposes this method via COM.  You 
+called [`HttpWebRequestWrapper`](WebRequest/HttpWebRequestWrapper.cs) that implements a single method called `Execute`.  It exposes this method via COM.  You 
 should build this solution first and then open a Powershell prompt using 'Run as administrator'.  Navigate to the 
 `WebRequest\bin` directory and then type `.\Register.ps1`.  This is only necessary the first time you build the COM
 object, however you should repeat the exercise if you make any changes to the WebRequest solution.
@@ -36,7 +38,9 @@ Press any key to continue . . .
 
 ### InProcSxSTest
 The InProcSxSTest solution creates a simple ASP.NET 2.0 Web Service which exposes three methods.  You must follow the
-above instructions first to ensure the WebRequest COM Object is correctly registered in the GAC.  
+above instructions in the [WebRequest Section](#WebRequest) first to ensure the WebRequest COM Object is correctly
+registered in the GAC.  The Web Service should build without any further requirements, and all the important code can
+be found in [`WebService.asmx.cs`](InProcSxSTest/WebService.asmx.cs).
 
 ## Debugging in Visual Studio
 As the projects are set to build in x86, it's important that IIS Express is also run in x86.  Further, the .NET 2.0
@@ -66,10 +70,16 @@ There are three web methods exposed:
 A simple web method that echoes the specified input.  This is used by the other two Web Methods as an endpoint to 
 contact whilst testing.
 
+To test click the `Invoke` button, any string you specify in the input box will be echoed back.
+
 ### TestWebRequest
 This web method will call the [Ping](#Ping) web method using the [.NET 2.0 System.Net.WebRequest](https://msdn.microsoft.com/en-us/library/system.net.webrequest(v=vs.80).aspx\),
 as such it can be used to ensure the InProcSxSTest is correctly installed and working, as it does not rely on the
-WebRequest COM Object already being installed. 
+WebRequest COM Object already being installed.
+
+To test click the `Invoke` button, you can optionally add an input
+string, which can be useful if you wish to find the string in a Memory Dump; however, if you leave the input empty
+a randomly generated Unicode string is created, which is more likely to identify encoding issues.
 
 ### TestInProcSxSWebRequest 
 This web method will call the [Ping](#Ping) web method using 
@@ -80,6 +90,10 @@ When the New Relic .NET Agent is running this will cause a
 [StackOverflowException](https://msdn.microsoft.com/en-us/library/system.stackoverflowexception(v=vs.110).aspx).  Note
 that this requires the WebRequest COM Object to be installed, as described in the [WebRequest Section](#WebRequest)
 above.
+
+Again, to test click the `Invoke` button, you can optionally add an input
+string, which can be useful if you wish to find the string in a Memory Dump; however, if you leave the input empty
+a randomly generated Unicode string is created, which is more likely to identify encoding issues.
 
 ## Debugging the WebRequest COM Object
 If you wish to Debug the .NET 4.0 WebRequest project then it is a little more complex as Visual Studio can only have one
