@@ -38,7 +38,7 @@ Press any key to continue . . .
 
 ### InProcSxSTest
 The InProcSxSTest solution creates a simple ASP.NET 2.0 Web Service which exposes three methods.  You must follow the
-above instructions in the [WebRequest Section](#WebRequest) first to ensure the WebRequest COM Object is correctly
+above instructions in the [WebRequest Section](#webrequest) first to ensure the WebRequest COM Object is correctly
 registered in the GAC.  The Web Service should build without any further requirements, and all the important code can
 be found in [`WebService.asmx.cs`](InProcSxSTest/WebService.asmx.cs).
 
@@ -88,7 +88,7 @@ to call the
 [.NET 4.0 `System.Net.WebRequest` class](https://blogs.msdn.microsoft.com/carlos/2013/08/23/loading-multiple-clr-runtimes-inproc-sxs-sample-code/).
 When the New Relic .NET Agent is running this will cause a 
 [StackOverflowException](https://msdn.microsoft.com/en-us/library/system.stackoverflowexception(v=vs.110).aspx).  Note
-that this requires the WebRequest COM Object to be installed, as described in the [WebRequest Section](#WebRequest)
+that this requires the WebRequest COM Object to be installed, as described in the [WebRequest Section](#webrequest)
 above.
 
 Again, to test click the `Invoke` button, you can optionally add an input
