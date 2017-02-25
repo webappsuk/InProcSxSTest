@@ -76,6 +76,10 @@ namespace WebRequest
             {
                 webRequest.ContentType = contentType;
                 webRequest.ContentLength = content.Length;
+
+                /*
+                 * STACK OVERFLOW OCCURS WHILST CALLING GetRequestStream() BELOW
+                 */
                 using (StreamWriter sw = new StreamWriter(webRequest.GetRequestStream()))
                     sw.Write(content);
             }
